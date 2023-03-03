@@ -25,6 +25,12 @@ $days = array_unique($days);
 <head>
     <title>Sunny innit</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <style>
+        img {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
 </head>
 <body>
 <div class="text-center">
@@ -32,6 +38,18 @@ $days = array_unique($days);
         echo "<h1>Weather now:  ".$today.", ".$time_now."</h1>";
         echo "<h1>".round($hourly_forecast[array_search($thing, $when)])."°C</h1>"
     ?>
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-2">
+            <img src="https://freesvg.org/img/weather-showers-scattered.png" alt="">
+        </div>
+        <div class="col-md-2">
+            <img src="https://freesvg.org/img/weather-clear.png" alt="">
+        </div>
+        <div class="col-md-2">
+            <img src="https://freesvg.org/img/weather-overcast.png" alt="">
+        </div>
+    </div>
     <?php
     foreach ($days as $day) {
         echo "<h1>".$day."</h1><br>";
