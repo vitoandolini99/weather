@@ -13,7 +13,12 @@ $today = date("Y-m-d");
 $time_now = date("h:00", strtotime(date("h:i")));
 
 $thing = $today."T".$time_now;
+$days = [];
 
+foreach($when as $dt){
+    array_push($days, substr($dt, 0, 10));
+}
+$days = array_unique($days);
 
 ?>
 <html lang="en">
@@ -22,10 +27,24 @@ $thing = $today."T".$time_now;
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
 </head>
 <body>
-<div style="text-align: center;">
+<div class="text-center">
     <?php
         echo "<h1>Weather now:  ".$today.", ".$time_now."</h1>";
         echo "<h1>".round($hourly_forecast[array_search($thing, $when)])."°C</h1>"
+    ?>
+    <?php
+    foreach ($days as $day) {
+        echo "<h1>".$day."</h1><br>";
+        echo "<table style='width:100%'><th>";
+        foreach ($hourly_forecast as $hour => $temperature){
+
+            if (substr($when[$hour], 0, 10) == $day){
+                echo "<td>".substr($when[$hour], 11)."<br>".round($temperature)."°C</td>";
+            }
+
+        }
+        echo "</th></table>";
+    }
     ?>
 </div>
     <!--
