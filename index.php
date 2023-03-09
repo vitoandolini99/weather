@@ -1,4 +1,15 @@
 <?php
+$cachefile = basename($_SERVER['PHP_SELF'], '.php') . '.cache';
+clearstatcache();
+
+if (file_exists($cachefile) && filemtime($cachefile) > time() - 10) { // good to serve!
+    include($cachefile);
+    exit;
+}
+
+ob_start();
+
+// DELIMITER
 
 $url = "https://api.open-meteo.com/v1/dwd-icon?latitude=52.52&longitude=13.41&hourly=temperature_2m&current_weather=true&timezone=Europe%2FBerlin&start_date=2023-03-01&end_date=2023-03-09";
 
@@ -35,19 +46,19 @@ $days = array_unique($days);
 <body>
 <div class="text-center">
     <?php
-        echo "<h1>Weather now:  ".$today.", ".$time_now."</h1>";
-        echo "<h1>".round($hourly_forecast[array_search($thing, $when)])."°C</h1>"
+    echo "<h1>Weather now:  ".$today.", ".$time_now."</h1>";
+    echo "<h1>".round($hourly_forecast[array_search($thing, $when)])."°C</h1>"
     ?>
     <div class="row">
         <div class="col-md-3"></div>
         <div class="col-md-2">
-            <img src="https://freesvg.org/img/weather-showers-scattered.png" alt="">
+            <img src="img/weather-showers-scattered-min.png" loading="lazy" alt="">
         </div>
         <div class="col-md-2">
-            <img src="https://freesvg.org/img/weather-clear.png" alt="">
+            <img src="img/weather-clear-min.png" loading="lazy" alt="">
         </div>
         <div class="col-md-2">
-            <img src="https://freesvg.org/img/weather-overcast.png" alt="">
+            <img src="img/weather-overcast-min.png" loading="lazy" alt="">
         </div>
     </div>
     <?php
@@ -65,19 +76,31 @@ $days = array_unique($days);
     }
     ?>
 </div>
-    <!--
+<!--
     <table>
         <tr>
             <th>Hour</th>
             <th>Temperature °C</th>
         </tr>
         <?php
-        foreach ($hourly_forecast as $hour => $temperature) {
-            echo "<tr><th>$when[$hour]</th><th>".round($temperature)."</th></tr>";
-        }
-        ?>
+foreach ($hourly_forecast as $hour => $temperature) {
+    echo "<tr><th>$when[$hour]</th><th>".round($temperature)."</th></tr>";
+}
+?>
     </table>
     -->
 
 </body>
 </html>
+<?php
+// END DELIMITER
+$contents = ob_get_contents();
+ob_end_clean();
+
+$handle = fopen("var/www/public_html/$cachefile", "w");
+fwrite($handle, $contents);
+fclose($handle);
+
+include("var/www/public_html/$cachefile");
+?>
+
